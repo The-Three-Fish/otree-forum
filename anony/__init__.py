@@ -1,3 +1,5 @@
+import logging
+import itertools
 from otree.api import *
 
 
@@ -13,7 +15,8 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    pass
+    def do_my_shuffle(self): 
+        print(1111)
 
 
 class Group(BaseGroup):
@@ -21,7 +24,17 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+
+    def creating_session(self):
+        # Log a message at the start of the session creation
+        logging.info("Session is being created")
+
+        # Example: Randomly grouping players
+        self.group_randomly()
+
+        # Log another message after some operations
+        logging.info("Players have been grouped randomly")
+
 
 
 # PAGES
@@ -30,8 +43,14 @@ class MyPage(Page):
 
 
 class ResultsWaitPage(WaitPage):
-    pass
+    body_text = "We are waiting for the other participants. We thank you for your patience!"
+    wait_for_all_groups = True
 
+    #after_all_players_arrive = 'after_all_players_arrive'
+    @staticmethod
+    def after_all_players_arrive(subsession):
+        subsession.do_my_shuffle()
+        print(666)
 
 class Results(Page):
     pass
